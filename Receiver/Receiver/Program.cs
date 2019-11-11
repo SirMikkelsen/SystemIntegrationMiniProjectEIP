@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -44,13 +45,25 @@ namespace Receiver
                     Console.WriteLine();
                     if (input == "a")
                     {
+                        var lines = System.IO.File.ReadAllLines(@"C:\Users\Gordon\Desktop\convert\hotels.csv");
+                        var xml = new XElement("TopElement",
+                            lines.Select(line => new XElement("Item",
+                                line.Split(';')
+                                    .Select((column, index) => new XElement("Column" + index, column)))));
+                        xml.Save(@"C:\Users\Gordon\Desktop\convert\xmloutputhotels.xml");
 
-                        Console.WriteLine("convertet hotel from csv to xml");
+                       // Console.WriteLine("convertet hotel from csv to xml");
                         break;
                     }
                     if (input == "b")
                     {
-                        Console.WriteLine("convertet room data from csv to xml");
+                        var lines = System.IO.File.ReadAllLines(@"C:\Users\Gordon\Desktop\convert\bookings.csv");
+                        var xml = new XElement("TopElement",
+                            lines.Select(line => new XElement("Item",
+                                line.Split(';')
+                                    .Select((column, index) => new XElement("Column" + index, column)))));
+                        xml.Save(@"C:\Users\Gordon\Desktop\convert\xmloutputbookings.xml");
+                    //    Console.WriteLine("convertet room data from csv to xml");
                         break;
                     }
 
