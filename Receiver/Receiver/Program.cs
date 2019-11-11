@@ -50,7 +50,7 @@ namespace Receiver
                             lines.Select(line => new XElement("Item",
                                 line.Split(';')
                                     .Select((column, index) => new XElement("Column" + index, column)))));
-                        xml.Save(@"C:\Users\Gordon\Desktop\convert\xmloutputhotels.xml");
+                         xml.Save(@"C:\Users\Gordon\Desktop\convert\xmloutputhotels.xml");
 
                        // Console.WriteLine("convertet hotel from csv to xml");
                         break;
