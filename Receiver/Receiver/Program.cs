@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace Customer
+namespace Receiver
 {
     class Program
     {
@@ -45,12 +45,12 @@ namespace Customer
                     if (input == "a")
                     {
 
-                        Console.WriteLine("convertet hotel from xml to csv");
+                        Console.WriteLine("convertet hotel from csv to xml");
                         break;
                     }
                     if (input == "b")
                     {
-                        Console.WriteLine("convertet room data from xml to csv");
+                        Console.WriteLine("convertet room data from csv to xml");
                         break;
                     }
 
