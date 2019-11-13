@@ -6,10 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-<<<<<<< Updated upstream
-=======
 using MySql.Data.MySqlClient;
->>>>>>> Stashed changes
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -19,18 +16,6 @@ namespace Receiver
     {
         static void Main(string[] args)
         {
-<<<<<<< Updated upstream
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-            using (var connection = factory.CreateConnection())
-            using (var channel = connection.CreateModel())
-            {
-                channel.QueueDeclare(queue: "hello",
-                    durable: false,
-                    exclusive: false,
-                    autoDelete: false,
-                    arguments: null);
-
-=======
 
 
             string connectionString = @"server=localhost;userid=root;
@@ -49,7 +34,6 @@ namespace Receiver
                     autoDelete: false,
                     arguments: null);
 
->>>>>>> Stashed changes
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>
                 {
@@ -72,47 +56,18 @@ namespace Receiver
                     Console.WriteLine();
                     if (input == "a")
                     {
-<<<<<<< Updated upstream
-                        var lines = System.IO.File.ReadAllLines(@"C:\Users\Gordon\Desktop\convert\hotels.csv");
-=======
                         var lines = System.IO.File.ReadAllLines(@"C:\test\kage.csv");
->>>>>>> Stashed changes
                         var xml = new XElement("TopElement",
                             lines.Select(line => new XElement("Item",
                                 line.Split(';')
                                     .Select((column, index) => new XElement("Column" + index, column)))));
-<<<<<<< Updated upstream
-                         xml.Save(@"C:\Users\Gordon\Desktop\convert\xmloutputhotels.xml");
-
-                       // Console.WriteLine("convertet hotel from csv to xml");
-=======
                         xml.Save(@"C:\test\vedik.xml");
 
                
->>>>>>> Stashed changes
                         break;
                     }
                     if (input == "b")
                     {
-<<<<<<< Updated upstream
-                        var lines = System.IO.File.ReadAllLines(@"C:\Users\Gordon\Desktop\convert\bookings.csv");
-                        var xml = new XElement("TopElement",
-                            lines.Select(line => new XElement("Item",
-                                line.Split(';')
-                                    .Select((column, index) => new XElement("Column" + index, column)))));
-                        xml.Save(@"C:\Users\Gordon\Desktop\convert\xmloutputbookings.xml");
-                    //    Console.WriteLine("convertet room data from csv to xml");
-                        break;
-                    }
-
-                    Console.WriteLine("wrong input");
-                    break;
-                }
-
-                Console.WriteLine(" Press [enter] to exit.");
-                Console.ReadLine();
-            }
-=======
 
                         connectionn.Open();
                         while (!reader.EndOfStream)
@@ -160,7 +115,6 @@ namespace Receiver
 
             }
            
->>>>>>> Stashed changes
         }
     }
 }
