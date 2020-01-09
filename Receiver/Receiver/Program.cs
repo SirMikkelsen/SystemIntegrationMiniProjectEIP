@@ -20,6 +20,9 @@ namespace Receiver
 
             string connectionString = @"server=localhost;userid=root;
             password=root;database=skole";
+
+            string csSQLSERVER = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SuveyServiceContext-b900fe09-1066-455e-8030-f2154abf1dd6;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+
             var reader = new StreamReader(File.OpenRead(@"C:\test\kage.csv"));
             MySqlConnection connectionn = null;
                connectionn = new MySqlConnection(connectionString);
@@ -100,11 +103,47 @@ namespace Receiver
 
 
                         connectionn.Close();
+                    }
 
+                    if(input == "c")
+                    {
+
+                        // Retrive id from  local sqlserver datbase
+
+
+                        using (connection)
+                        {
+                            SqlCommand command = new SqlCommand(
+                              "SELECT ID, FROM dbo.Suvey[data];",
+                              connection);
+                            connection.Open();
+
+                            SqlDataReader reader = command.ExecuteReader();
+
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    Console.WriteLine("{0}\t{1}", reader.GetInt32(0),
+                                        reader.GetString(1));
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("No rows found.");
+                            }
+                            reader.Close();
+                        }
+                     
+                        //  store id in hotel database
 
                     }
-              
-                
+
+
+
+
+
+
                     break;
                 }
 
