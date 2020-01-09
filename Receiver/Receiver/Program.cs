@@ -115,7 +115,7 @@ namespace Receiver
                         using (connection)
                         {
                             SqlCommand command = new SqlCommand(
-                            "INSERT INTO Survey (kolonner) VALUES (data);",
+                            "INSERT INTO Survey (NumberOfKids, BookingEXperince, SatisfactionWitHStaff, SatisfactionWithFood, SatisfactionWithCleaning, OtherComments) VALUES (null, null, null, null, null, null);",
                               connection);
                             connection.Open();
 
