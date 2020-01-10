@@ -22,11 +22,18 @@ namespace Receiver
             string connectionString = @"server=localhost;userid=root;
             password=root;database=skole";
 
-         string csSQLSERVER = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SuveyServiceContext-b900fe09-1066-455e-8030-f2154abf1dd6;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            string sqlServerCS = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SuveyServiceContext-b900fe09-1066-455e-8030-f2154abf1dd6;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+
+
+          //  Data Source = (localdb)\MSSQLLocalDB; Initial Catalog = SuveyServiceContext - b900fe09 - 1066 - 455e-8030 - f2154abf1dd6; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False
+
+            MySqlConnection conection2 = null;
+            conection2 = new MySqlConnection(sqlServerCS);
 
             var reader = new StreamReader(File.OpenRead(@"C:\test\kage.csv"));
+
             MySqlConnection connectionn = null;
-               connectionn = new MySqlConnection(connectionString);
+            connectionn = new MySqlConnection(connectionString);
 
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
@@ -67,7 +74,7 @@ namespace Receiver
                                     .Select((column, index) => new XElement("Column" + index, column)))));
                         xml.Save(@"C:\test\vedik.xml");
 
-               
+
                         break;
                     }
                     if (input == "b")
@@ -78,78 +85,77 @@ namespace Receiver
                         {
 
 
-                              
-                                MySqlCommand cmd = new MySqlCommand();
-                                cmd.Connection = connectionn;
 
-                                var line = reader.ReadLine();
+                            MySqlCommand cmd = new MySqlCommand();
+                            cmd.Connection = connectionn;
 
-                                var values = line.Split(' ');
-                                var a = values[0].Split(';');
+                            var line = reader.ReadLine();
 
-
+                            var values = line.Split(' ');
+                            var a = values[0].Split(';');
 
 
 
-                                cmd.CommandText = "INSERT INTO guest(name, passport_number) VALUES(@name, @passport_number)";
-                                cmd.Prepare();
 
-                               
-                                cmd.Parameters.AddWithValue("@Name", a[0]);
-                                cmd.Parameters.AddWithValue("@passport_number", a[1]);
-                                cmd.ExecuteNonQuery();
 
-                                
+                            cmd.CommandText = "INSERT INTO guest(name, passport_number) VALUES(@name, @passport_number)";
+                            cmd.Prepare();
+
+
+                            cmd.Parameters.AddWithValue("@Name", a[0]);
+                            cmd.Parameters.AddWithValue("@passport_number", a[1]);
+                            cmd.ExecuteNonQuery();
+
+
                         }
 
 
                         connectionn.Close();
                     }
 
-                    if(input == "c")
+                    if (input == "c")
                     {
 
-                        // Retrive id from  local sqlserver datbase
+                        // Retrive id from local sqlserver datbase
+                         conection2.Open;
+                        
+                        //using (connection)
+                        //{
+                        //    SqlCommand command = new SqlCommand(
+                        //    "INSERT INTO Survey (NumberOfKids, BookingEXperince, SatisfactionWitHStaff, SatisfactionWithFood, SatisfactionWithCleaning, OtherComments) VALUES (null, null, null, null, null, null);",
+                        //      connection);
+                        //    connection.Open();
 
-                        using (connection)
-                        {
-                            SqlCommand command = new SqlCommand(
-                            "INSERT INTO Survey (NumberOfKids, BookingEXperince, SatisfactionWitHStaff, SatisfactionWithFood, SatisfactionWithCleaning, OtherComments) VALUES (null, null, null, null, null, null);",
-                              connection);
-                            connection.Open();
+                        //    SqlDataReader r = command.ExecuteReader();
 
-                            SqlDataReader r = command.ExecuteReader();
-
-                            if (r.HasRows)
-                            {
-                                while (r.Read())
-                                {
-                                    Console.WriteLine("{0}\t{1}", r.GetInt32(0),
-                                        r.GetString(1));
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("No rows found.");
-                            }
-                            r.Close();
-                        }
-
-                        //  store id in hotel database
-
-
+                        //    if (r.HasRows)
+                        //    {
+                        //        while (r.Read())
+                        //        {
+                        //            Console.WriteLine("{0}\t{1}", r.GetInt32(0),
+                        //                r.GetString(1));
+                        //        }
+                        //    }
+                        //    else
+                        //    {
+                        //        Console.WriteLine("No rows found.");
+                        //    }
+                        //    r.Close();
                     }
+
+                    //store id in hotel database
 
                     break;
                 }
-
-            
-                Console.WriteLine(" Press [enter] to exit.");
-              
-                Console.ReadLine();
-
+                
             }
-           
+
+            Console.WriteLine(" Press [enter] to exit.");
+
+            Console.ReadLine();
+
         }
+
     }
 }
+
