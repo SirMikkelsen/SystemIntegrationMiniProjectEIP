@@ -172,11 +172,11 @@ namespace Receiver
                         connectionn.Open();
                         command3.Connection = connectionn;
 
-                        command3.CommandText = "UPDATE hotels SET Survey_id=@param1 WHERE id=@param2";
+                        command3.CommandText = "INSERT INTO hotel_survey (hotel_id, survey_id) VALUES (@param1, @param2)";
                         command3.Prepare();
 
-                        command3.Parameters.AddWithValue("@param1", list[0]);
-                        command3.Parameters.AddWithValue("@param2", input.Split(new char[0])[1]);
+                        command3.Parameters.AddWithValue("@param1", input.Split(new char[0])[1]);
+                        command3.Parameters.AddWithValue("@param2", list[0]);
                         command3.ExecuteNonQuery();
                         connectionn.Close();
 
