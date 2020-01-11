@@ -25,10 +25,9 @@ namespace Receiver
             string sqlServerCS = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SuveyServiceContext-b900fe09-1066-455e-8030-f2154abf1dd6;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
 
-          //  Data Source = (localdb)\MSSQLLocalDB; Initial Catalog = SuveyServiceContext - b900fe09 - 1066 - 455e-8030 - f2154abf1dd6; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False
+            //  Data Source = (localdb)\MSSQLLocalDB; Initial Catalog = SuveyServiceContext - b900fe09 - 1066 - 455e-8030 - f2154abf1dd6; Integrated Security = True; Connect Timeout = 30; Encrypt = False; TrustServerCertificate = False; ApplicationIntent = ReadWrite; MultiSubnetFailover = False
 
-            MySqlConnection conection2 = null;
-            conection2 = new MySqlConnection(sqlServerCS);
+
 
             var reader = new StreamReader(File.OpenRead(@"C:\test\kage.csv"));
 
@@ -55,6 +54,8 @@ namespace Receiver
                     Console.WriteLine(" Select a for hotel and hit enter");
                     Console.WriteLine();
                     Console.WriteLine(" select b for room and hit enter");
+                    Console.WriteLine();
+                    Console.WriteLine(" select c for survey and hit enter");
                 };
                 channel.BasicConsume(queue: "hello",
                     autoAck: true,
@@ -113,49 +114,82 @@ namespace Receiver
                         connectionn.Close();
                     }
 
-                    if (input == "c")
+                    if (input.Split(new char[0])[0] == "c")
                     {
 
+                        SqlConnection conection2 = null;
+                        conection2 = new SqlConnection(sqlServerCS);
                         // Retrive id from local sqlserver datbase
-                         conection2.Open;
-                        
-                        //using (connection)
-                        //{
-                        //    SqlCommand command = new SqlCommand(
-                        //    "INSERT INTO Survey (NumberOfKids, BookingEXperince, SatisfactionWitHStaff, SatisfactionWithFood, SatisfactionWithCleaning, OtherComments) VALUES (null, null, null, null, null, null);",
-                        //      connection);
-                        //    connection.Open();
+                        conection2.Open();
 
-                        //    SqlDataReader r = command.ExecuteReader();
 
-                        //    if (r.HasRows)
-                        //    {
-                        //        while (r.Read())
-                        //        {
-                        //            Console.WriteLine("{0}\t{1}", r.GetInt32(0),
-                        //                r.GetString(1));
-                        //        }
-                        //    }
-                        //    else
-                        //    {
-                        //        Console.WriteLine("No rows found.");
-                        //    }
-                        //    r.Close();
+                        using (SqlCommand command = new SqlCommand(
+                        "INSERT INTO dbo.Suvey (NumberOfKids, BookingEXperince, SatisfactionWitHStaff, SatisfactionWithFood, SatisfactionWithCleaning, OtherComments) VALUES (@param1, @param2, @param3, @param4, @param5, @param6);",
+                          conection2))
+                        {
+                            command.Parameters.Add("@param1", System.Data.SqlDbType.Int).Value = -1;
+                            command.Parameters.Add("@param2", System.Data.SqlDbType.Int).Value = -1;
+                            command.Parameters.Add("@param3", System.Data.SqlDbType.Int).Value = -1;
+                            command.Parameters.Add("@param4", System.Data.SqlDbType.Int).Value = -1;
+                            command.Parameters.Add("@param5", System.Data.SqlDbType.Int).Value = -1;
+                            command.Parameters.Add("@param6", System.Data.SqlDbType.VarChar).Value = "";
+                            command.CommandType = System.Data.CommandType.Text;
+                            command.ExecuteNonQuery();
+                        }
+
+                        string query = "SELECT TOP 1 * FROM dbo.Suvey ORDER BY id DESC";
+
+                        SqlCommand command2 = new SqlCommand(query, conection2);
+
+                        SqlDataReader reader2 = command2.ExecuteReader();
+
+
+                        string qurryString = "SELECT TOP 1 * FROM [TABLENAME] ORDER BY id DESC";
+
+
+
+                        if (reader2.HasRows)
+                        {
+                            while (reader2.Read())
+                            {
+                                var surveyID = reader2.GetInt32(0).ToString();
+                            }
+
+                           
+                        }
+                        else
+                        {
+                            Console.WriteLine("No rows found.");
+                        }
+
+                       
+                        reader2.Close();
+
+
+                        //store id in hotel database
+
+                        MySqlCommand command3 = new MySqlCommand();
+
+                        command3.Connection = connectionn;
+
+                        command3.CommandText = "UPDATE hotels SET Survey_id=@param1 WHERE id=@param2";
+                        command3.Prepare();
+
+                        command3.Parameters.AddWithValue("@param1", surveyID);
+
+
+                        break;
                     }
 
-                    //store id in hotel database
-
-                    break;
                 }
-                
+
+                Console.WriteLine(" Press [enter] to exit.");
+
+                Console.ReadLine();
+
             }
 
-            Console.WriteLine(" Press [enter] to exit.");
-
-            Console.ReadLine();
-
         }
-
     }
 }
 
