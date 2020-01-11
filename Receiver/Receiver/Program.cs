@@ -20,7 +20,7 @@ namespace Receiver
 
 
             string connectionString = @"server=localhost;userid=root;
-            password=root;database=skole";
+            password=root;database=hoteldb";
 
             string sqlServerCS = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=SuveyServiceContext-b900fe09-1066-455e-8030-f2154abf1dd6;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
@@ -146,15 +146,15 @@ namespace Receiver
 
                         string qurryString = "SELECT TOP 1 * FROM [TABLENAME] ORDER BY id DESC";
 
-
+                        List<Int32> list = new List<Int32>();
 
                         if (reader2.HasRows)
                         {
+
                             while (reader2.Read())
                             {
-                                var surveyID = reader2.GetInt32(0).ToString();
+                               list.Add(reader2.GetInt32(0));
                             }
-
                            
                         }
                         else
@@ -169,14 +169,16 @@ namespace Receiver
                         //store id in hotel database
 
                         MySqlCommand command3 = new MySqlCommand();
-
+                        connectionn.Open();
                         command3.Connection = connectionn;
 
                         command3.CommandText = "UPDATE hotels SET Survey_id=@param1 WHERE id=@param2";
                         command3.Prepare();
 
-                        command3.Parameters.AddWithValue("@param1", surveyID);
-
+                        command3.Parameters.AddWithValue("@param1", list[0]);
+                        command3.Parameters.AddWithValue("@param2", input.Split(new char[0])[1]);
+                        command3.ExecuteNonQuery();
+                        connectionn.Close();
 
                         break;
                     }
